@@ -1,28 +1,37 @@
 package com.example.meetup;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Calendar;
 
 public class CreateEventActivity extends AppCompatActivity {
-    private EditText etEventName, etEventLocation;
+
+    private EditText etEventName;
     private Button btnChooseDate, btnChooseTime, btnSaveEvent;
-    private Switch switchRecurring;
+    private FusedLocationProviderClient fusedLocationClient;
     private String selectedDate = "", selectedTime = "";
-    private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
+    private GoogleMap googleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,81 +39,82 @@ public class CreateEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_event);
 
         etEventName = findViewById(R.id.etEventName);
-        etEventLocation = findViewById(R.id.etEventLocation);
         btnChooseDate = findViewById(R.id.btnChooseDate);
         btnChooseTime = findViewById(R.id.btnChooseTime);
         btnSaveEvent = findViewById(R.id.btnSaveEvent);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-
-        db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
-
-        // Выбор даты
         btnChooseDate.setOnClickListener(v -> showDatePicker());
-
-        // Выбор времени
         btnChooseTime.setOnClickListener(v -> showTimePicker());
-
-        // Сохранение мероприятия
         btnSaveEvent.setOnClickListener(v -> saveEvent());
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(googleMap -> {
+                CreateEventActivity.this.googleMap = googleMap;
+                getCurrentLocation();
+            });
+        }
     }
 
-    // Показ диалога выбора даты
+    private void getCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            return;
+        }
+        fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+            if (location != null) {
+                LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                googleMap.addMarker(new MarkerOptions().position(currentLatLng).title("Your Location"));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f));
+            }
+        });
+    }
+
     private void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                this,
-                (view, year1, month1, dayOfMonth) -> {
-                    selectedDate = dayOfMonth + "/" + (month1 + 1) + "/" + year1;
-                    btnChooseDate.setText("Date: " + selectedDate);
-                },
-                year, month, day
-        );
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, selectedYear, selectedMonth, selectedDay) -> {
+            selectedDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
+            btnChooseDate.setText(selectedDate);
+        }, year, month, day);
+
         datePickerDialog.show();
     }
 
-    // Показ диалога выбора времени
     private void showTimePicker() {
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(
-                this,
-                (view, hourOfDay, minute1) -> {
-                    selectedTime = hourOfDay + ":" + minute1;
-                    btnChooseTime.setText("Time: " + selectedTime);
-                },
-                hour, minute, true
-        );
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, (view, selectedHour, selectedMinute) -> {
+            selectedTime = String.format("%02d:%02d", selectedHour, selectedMinute);
+            btnChooseTime.setText(selectedTime);
+        }, hour, minute, true);
+
         timePickerDialog.show();
     }
 
-    // Сохранение мероприятия
     private void saveEvent() {
         String eventName = etEventName.getText().toString().trim();
-        String eventLocation = etEventLocation.getText().toString().trim();
-        boolean isRecurring = switchRecurring.isChecked();
-        String creatorId = mAuth.getCurrentUser().getUid();
 
-        if (eventName.isEmpty() || eventLocation.isEmpty() || selectedDate.isEmpty() || selectedTime.isEmpty()) {
-            Toast.makeText(this, "Заполните все поля!", Toast.LENGTH_SHORT).show();
+        if (eventName.isEmpty() || selectedDate.isEmpty() || selectedTime.isEmpty()) {
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Event event = new Event(eventName, eventLocation, selectedDate + " " + selectedTime, isRecurring, creatorId);
-        db.collection("events")
-                .add(event)
-                .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(this, "Мероприятие создано!", Toast.LENGTH_SHORT).show();
-                    finish();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Ошибка: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+        Toast.makeText(this, "Event Saved: " + eventName + " on " + selectedDate + " at " + selectedTime, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getCurrentLocation();
+        }
     }
 }

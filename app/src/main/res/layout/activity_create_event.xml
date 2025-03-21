@@ -22,11 +22,12 @@
         android:layout_marginBottom="16dp"/>
 
     <!-- Поле для ввода места проведения -->
-    `<EditText
-        android:id="@+id/etEventLocation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Location"
+    `<fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
         android:layout_marginBottom="16dp"/>
 
     <!-- Выбор даты -->
