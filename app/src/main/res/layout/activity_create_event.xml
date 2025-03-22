@@ -1,64 +1,65 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:fillViewport="true">
 
-    <!-- Заголовок "New event" -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New event"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="24dp"/>
-
-    <!-- Поле для ввода названия мероприятия -->
-    <EditText
-        android:id="@+id/etEventName"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Event Name"
-        android:layout_marginBottom="16dp"/>
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <!-- Поле для ввода места проведения -->
-    `<fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="16dp"/>
+        <!-- Event name -->
+        <EditText
+            android:id="@+id/etEventName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Event Name" />
 
-    <!-- Выбор даты -->
-    <Button
+        <Button
+            android:id="@+id/btnAttachPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Attach Photo" />
+
+        <!-- ImageView for selected photo -->
+        <ImageView
+            android:id="@+id/ivEventPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:visibility="gone"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop" />
+        <!-- Choose Date button -->
+        <Button
         android:id="@+id/btnChooseDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Choose Date"
-        android:layout_marginBottom="16dp"/>
+        android:text="Choose Date" />
 
-    <!-- Выбор времени -->
-    <Button
+        <!-- Choose Time button -->
+        <Button
         android:id="@+id/btnChooseTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Choose Time"
-        android:layout_marginBottom="16dp"/>
+        android:text="Choose Time" />
 
-    <!-- Разделитель -->
-    <View
+        <!-- Map for location selection -->
+        <fragment
+        android:id="@+id/map"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        android:layout_marginBottom="16dp"/>
+        android:layout_height="300dp"
+        android:name="com.google.android.gms.maps.SupportMapFragment" />
 
-    <!-- Переключатель для повторяющихся мероприятий -->
+        <!-- Button to attach photo -->
 
-    <!-- Кнопка для сохранения мероприятия -->
-    <Button
-        android:id="@+id/btnSaveEvent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save Event"/>
-</LinearLayout>
+        <!-- Save Event button -->
+        <Button
+            android:id="@+id/btnSaveEvent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Event" />
+
+    </LinearLayout>
+</ScrollView>

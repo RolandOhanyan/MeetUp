@@ -1,70 +1,40 @@
 package com.example.meetup;
 
 public class Event {
-    private String id;
-    private String title;
-    private String location;
-    private String dateTime;
-    private boolean isRecurring;
-    private String creatorId;
+    private String eventName;
+    private String eventDate;
+    private String eventTime;
+    private double latitude;
+    private double longitude;
+    private String imageUrl; // Добавляем поле для фото
 
-    // Конструктор по умолчанию (обязателен для Firestore)
-    public Event() {}
-
-    public Event(String title, String location, String dateTime, boolean isRecurring, String creatorId) {
-        this.title = title;
-        this.location = location;
-        this.dateTime = dateTime;
-        this.isRecurring = isRecurring;
-        this.creatorId = creatorId;
+    // Пустой конструктор для Firestore
+    public Event() {
     }
 
-    // Геттеры и сеттеры
-    public String getId() {
-        return id;
+    // Основной конструктор
+    public Event(String eventName, String eventDate, String eventTime, double latitude, double longitude, String imageUrl) {
+        this.eventName = eventName;
+        this.eventDate = eventDate;
+        this.eventTime = eventTime;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.imageUrl = imageUrl; // Теперь сохраняем фото
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    // Геттеры
+    public String getEventName() { return eventName; }
+    public String getEventDate() { return eventDate; }
+    public String getEventTime() { return eventTime; }
+    public double getLatitude() { return latitude; }
+    public double getLongitude() { return longitude; }
+    public String getImageUrl() { return imageUrl; } // Добавлен геттер
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getDateTime() {
-        return dateTime;
-    }
-
-    public void setDateTime(String dateTime) {
-        this.dateTime = dateTime;
-    }
-
-    public boolean isRecurring() {
-        return isRecurring;
-    }
-
-    public void setRecurring(boolean recurring) {
-        isRecurring = recurring;
-    }
-
-    public String getCreatorId() {
-        return creatorId;
-    }
-
-    public void setCreatorId(String creatorId) {
-        this.creatorId = creatorId;
-    }
+    // Сеттеры
+    public void setEventName(String eventName) { this.eventName = eventName; }
+    public void setEventDate(String eventDate) { this.eventDate = eventDate; }
+    public void setEventTime(String eventTime) { this.eventTime = eventTime; }
+    public void setLatitude(double latitude) { this.latitude = latitude; }
+    public void setLongitude(double longitude) { this.longitude = longitude; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; } // Добавлен сеттер
 }

@@ -45,6 +45,7 @@ dependencies {
     implementation(libs.googleid)
     implementation(libs.firebase.firestore)
     implementation(libs.play.services.location)
+    implementation(libs.firebase.storage)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -55,5 +56,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation("com.google.android.material:material:1.5.0")
     implementation ("com.google.android.gms:play-services-maps:18.1.0")
+    implementation("com.google.android.material:material:1.7.0") // Для Material Components
+    implementation("androidx.core:core-ktx:1.10.0")
 
 }

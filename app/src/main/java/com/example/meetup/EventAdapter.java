@@ -27,9 +27,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = eventList.get(position);
-        holder.tvEventTitle.setText(event.getTitle());
-        holder.tvEventLocation.setText(event.getLocation());
-        holder.tvEventDateTime.setText(event.getDateTime());
+
+        holder.tvEventTitle.setText(event.getEventName());  // Display event name
+        holder.tvEventDateTime.setText(event.getEventDate() + " at " + event.getEventTime());  // Combine date and time
+
+        // Display the location (latitude and longitude)
+        String location = "Lat: " + event.getLatitude() + ", Lon: " + event.getLongitude();
+        holder.tvEventLocation.setText(location);
     }
 
     @Override
