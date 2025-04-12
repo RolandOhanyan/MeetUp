@@ -7,10 +7,7 @@
         android:id="@+id/navigation_groups"
         android:icon="@drawable/groups"
         android:title="Groups" />
-    <item
-        android:id="@+id/navigation_watch"
-        android:icon="@drawable/watch"
-        android:title="Watch" />
+
     <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/profile"
