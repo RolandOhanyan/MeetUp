@@ -8,7 +8,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,7 +32,7 @@ public class RegisterActivity extends AppCompatActivity {
         etFirstName = findViewById(R.id.etFirstName);
         etLastName = findViewById(R.id.etLastName);
         etPhone = findViewById(R.id.etPhone);
-        etUsername = findViewById(R.id.etUsername); // Новое поле для username
+        etUsername = findViewById(R.id.etUsername);
         etEmail = findViewById(R.id.etRegEmail);
         etPassword = findViewById(R.id.etRegPassword);
         btnRegister = findViewById(R.id.btnRegister);
@@ -50,11 +49,10 @@ public class RegisterActivity extends AppCompatActivity {
         String firstName = etFirstName.getText().toString().trim();
         String lastName = etLastName.getText().toString().trim();
         String phone = etPhone.getText().toString().trim();
-        String username = etUsername.getText().toString().trim(); // Получаем username
+        String username = etUsername.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
-        // Проверка, что все поля заполнены
         if (TextUtils.isEmpty(firstName) || TextUtils.isEmpty(lastName) ||
                 TextUtils.isEmpty(phone) || TextUtils.isEmpty(username) ||
                 TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
@@ -62,46 +60,46 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // Создание пользователя в Firebase Auth
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
-                            // Сохранение данных пользователя в Firestore
-                            saveUserToFirestore(user.getUid(), firstName, lastName, phone, username, email);
+                            user.sendEmailVerification()
+                                    .addOnCompleteListener(verifyTask -> {
+                                        if (verifyTask.isSuccessful()) {
+                                            saveUserToFirestore(user.getUid(), firstName, lastName, phone, username, email);
+                                            Toast.makeText(this, "Письмо для подтверждения отправлено на " + user.getEmail(), Toast.LENGTH_LONG).show();
+                                            startActivity(new Intent(this, LoginActivity.class));
+                                            finish();
+                                        } else {
+                                            Toast.makeText(this, "Ошибка отправки письма: " + verifyTask.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    });
                         }
                     } else {
-                        // Обработка ошибок регистрации
-                        if (task.getException() != null) {
-                            String errorMessage = task.getException().getMessage();
-                            Toast.makeText(this, "Ошибка регистрации: " + errorMessage, Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(this, "Неизвестная ошибка регистрации!", Toast.LENGTH_SHORT).show();
-                        }
+                        String errorMessage = (task.getException() != null) ? task.getException().getMessage() : "Неизвестная ошибка регистрации!";
+                        Toast.makeText(this, "Ошибка регистрации: " + errorMessage, Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
-    // Сохранение данных пользователя в Firestore
     private void saveUserToFirestore(String userId, String firstName, String lastName, String phone, String username, String email) {
         Map<String, Object> user = new HashMap<>();
         user.put("firstName", firstName);
         user.put("lastName", lastName);
         user.put("phone", phone);
-        user.put("username", username); // Сохраняем username
+        user.put("username", username);
         user.put("email", email);
         user.put("created_at", System.currentTimeMillis());
 
         db.collection("users").document(userId)
                 .set(user)
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "Регистрация успешна!", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(this, MainActivity.class));
-                    finish();
+                    // данные успешно сохранены, уже отправлено письмо — ничего тут делать не надо
                 })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Ошибка сохранения данных!", Toast.LENGTH_SHORT).show()
-                );
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Ошибка сохранения данных!", Toast.LENGTH_SHORT).show();
+                });
     }
 }

@@ -31,6 +31,9 @@
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
+        <activity
+            android:name=".SelectCategoryActivity"
+            android:exported="false" />
 
         <activity
             android:name=".MainActivity"

@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -16,9 +17,11 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,7 +54,8 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void fetchQuestions() {
-        String url = "https://opentdb.com/api.php?amount=10&type=multiple";
+        String categoryId = getIntent().getStringExtra("CATEGORY_ID");
+        String url = "https://opentdb.com/api.php?amount=10&category=" + categoryId + "&type=multiple";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET,
@@ -86,6 +90,7 @@ public class QuizActivity extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
 
+
     private void displayQuestion() {
         if (currentQuestionIndex < questions.size()) {
             Question currentQuestion = questions.get(currentQuestionIndex);
@@ -97,24 +102,14 @@ public class QuizActivity extends AppCompatActivity {
             option3Button.setText(options.get(2));
             option4Button.setText(options.get(3));
 
-            // Reset button colors
-            option1Button.setBackgroundColor(getResources().getColor(android.R.color.white));
-            option2Button.setBackgroundColor(getResources().getColor(android.R.color.white));
-            option3Button.setBackgroundColor(getResources().getColor(android.R.color.white));
-            option4Button.setBackgroundColor(getResources().getColor(android.R.color.white));
+            resetButtonColors();
 
-            // Set click listeners
             option1Button.setOnClickListener(v -> checkAnswer(option1Button.getText().toString()));
             option2Button.setOnClickListener(v -> checkAnswer(option2Button.getText().toString()));
             option3Button.setOnClickListener(v -> checkAnswer(option3Button.getText().toString()));
             option4Button.setOnClickListener(v -> checkAnswer(option4Button.getText().toString()));
         } else {
-            // Quiz finished
-            questionTextView.setText("Quiz finished! Your score: " + score + "/" + questions.size());
-            option1Button.setVisibility(View.GONE);
-            option2Button.setVisibility(View.GONE);
-            option3Button.setVisibility(View.GONE);
-            option4Button.setVisibility(View.GONE);
+            finishQuiz();
         }
     }
 
@@ -122,19 +117,25 @@ public class QuizActivity extends AppCompatActivity {
         Question currentQuestion = questions.get(currentQuestionIndex);
         Button selectedButton = findSelectedButton(selectedAnswer);
 
-        // Отключаем все кнопки, чтобы предотвратить множественные нажатия
         setButtonsEnabled(false);
 
         if (selectedAnswer.equals(currentQuestion.getCorrectAnswer())) {
             score++;
             scoreTextView.setText("Score: " + score);
-            animateButton(selectedButton, true); // Анимация для правильного ответа
+            selectedButton.setBackgroundColor(ContextCompat.getColor(this, R.color.green));
         } else {
-            animateButton(selectedButton, false); // Анимация для неправильного ответа
-            highlightCorrectAnswer(currentQuestion.getCorrectAnswer());
+            // неправильный ответ — красный
+            selectedButton.setBackgroundColor(ContextCompat.getColor(this, R.color.red));
+            // правильный ответ — зелёный
+            Button correctButton = findSelectedButton(currentQuestion.getCorrectAnswer());
+            if (correctButton != null) {
+                correctButton.setBackgroundColor(ContextCompat.getColor(this, R.color.green));
+            }
         }
 
-        // Переход к следующему вопросу после задержки
+        // Все остальные кнопки — белые
+        resetOtherButtonsColor(selectedButton, currentQuestion.getCorrectAnswer());
+
         new Handler().postDelayed(() -> {
             currentQuestionIndex++;
             if (currentQuestionIndex < questions.size()) {
@@ -146,6 +147,28 @@ public class QuizActivity extends AppCompatActivity {
         }, 1500);
     }
 
+    private void resetOtherButtonsColor(Button selectedButton, String correctAnswer) {
+        List<Button> allButtons = List.of(option1Button, option2Button, option3Button, option4Button);
+        for (Button btn : allButtons) {
+            String text = btn.getText().toString();
+            if (!text.equals(correctAnswer) && btn != selectedButton) {
+                btn.setBackgroundColor(ContextCompat.getColor(this, android.R.color.white));
+            }
+        }
+    }
+
+    private void setButtonColor(Button button, int colorResId) {
+        button.setBackgroundColor(ContextCompat.getColor(this, colorResId));
+    }
+
+    private void resetButtonColors() {
+        int white = ContextCompat.getColor(this, android.R.color.white);
+        option1Button.setBackgroundColor(white);
+        option2Button.setBackgroundColor(white);
+        option3Button.setBackgroundColor(white);
+        option4Button.setBackgroundColor(white);
+    }
+
     private Button findSelectedButton(String selectedAnswer) {
         if (option1Button.getText().toString().equals(selectedAnswer)) return option1Button;
         if (option2Button.getText().toString().equals(selectedAnswer)) return option2Button;
@@ -154,19 +177,7 @@ public class QuizActivity extends AppCompatActivity {
         return null;
     }
 
-    private void highlightCorrectAnswer(String correctAnswer) {
-        Button correctButton = findSelectedButton(correctAnswer);
-        if (correctButton != null) {
-            correctButton.setBackgroundColor(ContextCompat.getColor(this, R.color.green));
-        }
-    }
-
     private void animateButton(Button button, boolean isCorrect) {
-        // Изменение цвета кнопки
-        int colorRes = isCorrect ? R.color.green : R.color.red;
-        button.setBackgroundColor(ContextCompat.getColor(this, colorRes));
-
-        // Анимация масштабирования
         ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(button, "scaleX", 0.9f);
         ObjectAnimator scaleDownY = ObjectAnimator.ofFloat(button, "scaleY", 0.9f);
         scaleDownX.setDuration(100);
