@@ -4,10 +4,12 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,7 +32,9 @@ public class QuizActivity extends AppCompatActivity {
 
     private TextView questionTextView;
     private Button option1Button, option2Button, option3Button, option4Button;
-    private TextView scoreTextView;
+    private TextView scoreTextView, progressText;
+    private ProgressBar progressBar;
+    private Button playAgainButton;
     private RequestQueue requestQueue;
 
     private List<Question> questions = new ArrayList<>();
@@ -48,9 +52,17 @@ public class QuizActivity extends AppCompatActivity {
         option3Button = findViewById(R.id.option3Button);
         option4Button = findViewById(R.id.option4Button);
         scoreTextView = findViewById(R.id.scoreTextView);
+        progressBar = findViewById(R.id.progressBar);
+        progressText = findViewById(R.id.progressText);
+        playAgainButton = findViewById(R.id.playAgainButton);
 
         requestQueue = Volley.newRequestQueue(this);
         fetchQuestions();
+
+        playAgainButton.setOnClickListener(v -> {
+            // Закрываем текущую активность и возвращаемся назад
+            finish();
+        });
     }
 
     private void fetchQuestions() {
@@ -90,9 +102,9 @@ public class QuizActivity extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
 
-
     private void displayQuestion() {
         if (currentQuestionIndex < questions.size()) {
+            updateProgress();
             Question currentQuestion = questions.get(currentQuestionIndex);
             questionTextView.setText(currentQuestion.getQuestionText());
 
@@ -113,6 +125,13 @@ public class QuizActivity extends AppCompatActivity {
         }
     }
 
+    private void updateProgress() {
+        int totalQuestions = questions.size();
+        int progress = (int) ((currentQuestionIndex + 1) * 100.0 / totalQuestions);
+        progressBar.setProgress(progress);
+        progressText.setText(String.format("%d/%d", currentQuestionIndex + 1, totalQuestions));
+    }
+
     private void checkAnswer(String selectedAnswer) {
         Question currentQuestion = questions.get(currentQuestionIndex);
         Button selectedButton = findSelectedButton(selectedAnswer);
@@ -124,16 +143,13 @@ public class QuizActivity extends AppCompatActivity {
             scoreTextView.setText("Score: " + score);
             selectedButton.setBackgroundColor(ContextCompat.getColor(this, R.color.green));
         } else {
-            // неправильный ответ — красный
             selectedButton.setBackgroundColor(ContextCompat.getColor(this, R.color.red));
-            // правильный ответ — зелёный
             Button correctButton = findSelectedButton(currentQuestion.getCorrectAnswer());
             if (correctButton != null) {
                 correctButton.setBackgroundColor(ContextCompat.getColor(this, R.color.green));
             }
         }
 
-        // Все остальные кнопки — белые
         resetOtherButtonsColor(selectedButton, currentQuestion.getCorrectAnswer());
 
         new Handler().postDelayed(() -> {
@@ -216,5 +232,6 @@ public class QuizActivity extends AppCompatActivity {
         option2Button.setVisibility(View.GONE);
         option3Button.setVisibility(View.GONE);
         option4Button.setVisibility(View.GONE);
+        playAgainButton.setVisibility(View.VISIBLE);
     }
 }
