@@ -1,109 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:id="@+id/main"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="24dp"
+    android:background="@color/md_theme_light_background"
+    android:fillViewport="true">
 
-    <!-- Заголовок "Register" -->
-    <TextView
-        android:id="@+id/tvRegisterTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Register"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="32dp"/>
-
-    <!-- Поле для ввода First Name -->
-    <EditText
-        android:id="@+id/etFirstName"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="First Name"
-        android:inputType="textPersonName"
-        android:layout_below="@id/tvRegisterTitle"
-        android:layout_marginBottom="8dp"/>
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
-    <!-- Поле для ввода Last Name -->
-    <EditText
-        android:id="@+id/etLastName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Last Name"
-        android:inputType="textPersonName"
-        android:layout_below="@id/etFirstName"
-        android:layout_marginBottom="8dp"/>
+        <!-- Заголовок -->
+        <TextView
+            android:id="@+id/tvRegisterTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Register"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@color/md_theme_light_onBackground"
+            android:layout_marginBottom="32dp" />
 
-    <EditText
-        android:id="@+id/etUsername"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Username"
-        android:inputType="text"
-        android:layout_below="@id/etLastName"
-        android:layout_marginBottom="8dp"/>
+        <!-- Имя -->
+        <EditText
+            android:id="@+id/etFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="First Name"
+            android:inputType="textPersonName"
+            android:layout_marginBottom="8dp"
+            android:padding="12dp"
+            android:backgroundTint="@color/md_theme_light_primary" />
 
-    <!-- Поле для ввода Phone Number -->
-    <EditText
-        android:id="@+id/etPhone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Phone Number"
-        android:inputType="phone"
-        android:layout_below="@id/etUsername"
-        android:layout_marginBottom="8dp"/>
+        <!-- Фамилия -->
+        <EditText
+            android:id="@+id/etLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Last Name"
+            android:inputType="textPersonName"
+            android:layout_marginBottom="8dp"
+            android:padding="12dp"
+            android:backgroundTint="@color/md_theme_light_primary" />
 
-    <!-- Поле для ввода Email -->
-    <EditText
-        android:id="@+id/etRegEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
-        android:layout_below="@id/etPhone"
-        android:layout_marginBottom="16dp"/>
+        <!-- Username -->
+        <EditText
+            android:id="@+id/etUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Username"
+            android:inputType="text"
+            android:layout_marginBottom="8dp"
+            android:padding="12dp"
+            android:backgroundTint="@color/md_theme_light_primary" />
 
-    <!-- Поле для ввода Password -->
-    <EditText
-        android:id="@+id/etRegPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:layout_below="@id/etRegEmail"
-        android:layout_marginBottom="24dp"/>
+        <!-- Телефон -->
+        <EditText
+            android:id="@+id/etPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Phone Number"
+            android:inputType="phone"
+            android:layout_marginBottom="8dp"
+            android:padding="12dp"
+            android:backgroundTint="@color/md_theme_light_primary" />
 
-    <!-- Кнопка "REGISTER" -->
-    <Button
-        android:id="@+id/btnRegister"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="REGISTER"
-        android:layout_below="@id/etRegPassword"
-        android:layout_marginBottom="16dp"/>
+        <!-- Email -->
+        <EditText
+            android:id="@+id/etRegEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:layout_marginBottom="8dp"
+            android:padding="12dp"
+            android:backgroundTint="@color/md_theme_light_primary" />
 
-    <!-- Текст "Already registered" -->
-    <TextView
-        android:id="@+id/tvAlreadyRegistered"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Already registered"
-        android:layout_below="@id/btnRegister"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"/>
+        <!-- Пароль -->
+        <EditText
+            android:id="@+id/etRegPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:layout_marginBottom="24dp"
+            android:padding="12dp"
+            android:backgroundTint="@color/md_theme_light_primary" />
 
-    <!-- Ссылка "Login here" -->
-    <TextView
-        android:id="@+id/tvLoginHere"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Login here"
-        android:textColor="@color/colorPrimary"
-        android:layout_below="@id/tvAlreadyRegistered"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"/>
+        <!-- Кнопка регистрации -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="REGISTER"
+            android:textColor="@color/white"
+            android:layout_marginBottom="24dp"
+            app:cornerRadius="24dp"
+            app:backgroundTint="@color/md_theme_light_primary" />
 
-</RelativeLayout>
+        <!-- Текст "Уже зарегистрированы?" -->
+        <TextView
+            android:id="@+id/tvAlreadyRegistered"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Already registered?"
+            android:textColor="@color/md_theme_light_onBackground"
+            android:layout_marginTop="8dp" />
+
+        <!-- Ссылка "Login here" -->
+        <TextView
+            android:id="@+id/tvLoginHere"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Login here"
+            android:textStyle="bold"
+            android:textColor="@color/md_theme_light_primary"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
+</ScrollView>

@@ -1,79 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:id="@+id/main"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="24dp"
+    android:background="@color/md_theme_light_background"
+    android:fillViewport="true">
 
-    <!-- Заголовок "Login" -->
-    <TextView
-        android:id="@+id/tvLoginTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Login"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="32dp"
-        android:importantForAccessibility="yes" />
-
-    <!-- Поле для ввода Email -->
-    <EditText
-        android:id="@+id/etLoginEmail"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
-        android:layout_below="@id/tvLoginTitle"
-        android:layout_marginBottom="16dp"
-        android:importantForAccessibility="yes"
-        android:contentDescription="Enter your email address" />
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
-    <!-- Поле для ввода Password -->
-    <EditText
-        android:id="@+id/etLoginPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:layout_below="@id/etLoginEmail"
-        android:layout_marginBottom="24dp"
-        android:importantForAccessibility="yes"
-        android:contentDescription="Enter your password" />
+        <!-- Заголовок "Login" -->
+        <TextView
+            android:id="@+id/tvLoginTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@color/md_theme_light_onBackground"
+            android:layout_marginBottom="32dp"
+            android:importantForAccessibility="yes" />
 
-    <!-- Кнопка "LOGIN" -->
-    <Button
-        android:id="@+id/btnLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="LOGIN"
-        android:layout_below="@id/etLoginPassword"
-        android:layout_marginBottom="16dp"
-        android:importantForAccessibility="yes"
-        android:contentDescription="Click to log in" />
+        <!-- Поле Email -->
+        <EditText
+            android:id="@+id/etLoginEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/md_theme_light_primary"
+            android:padding="12dp"
+            android:importantForAccessibility="yes"
+            android:contentDescription="Enter your email address" />
 
-    <!-- Текст "Not registered yet" -->
-    <TextView
-        android:id="@+id/tvNotRegistered"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Not registered yet"
-        android:layout_below="@id/btnLogin"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp" />
+        <!-- Поле Password -->
+        <EditText
+            android:id="@+id/etLoginPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="@color/md_theme_light_primary"
+            android:padding="12dp"
+            android:importantForAccessibility="yes"
+            android:contentDescription="Enter your password" />
 
-    <!-- Ссылка "Register here" -->
-    <TextView
-        android:id="@+id/tvRegisterHere"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Register here"
-        android:textColor="@color/colorPrimary"
-        android:layout_below="@id/tvNotRegistered"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
-        android:importantForAccessibility="yes"
-        android:contentDescription="Click to go to registration screen" />
+        <!-- Кнопка Login -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LOGIN"
+            android:textColor="@color/white"
+            app:cornerRadius="24dp"
+            app:backgroundTint="@color/md_theme_light_primary"
+            android:layout_marginBottom="24dp"
+            android:importantForAccessibility="yes"
+            android:contentDescription="Click to log in" />
 
-</RelativeLayout>
+        <!-- Текст "Not registered yet" -->
+        <TextView
+            android:id="@+id/tvNotRegistered"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Not registered yet"
+            android:textColor="@color/md_theme_light_onBackground"
+            android:layout_marginTop="16dp" />
+
+        <!-- Ссылка "Register here" -->
+        <TextView
+            android:id="@+id/tvRegisterHere"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Register here"
+            android:textColor="@color/md_theme_light_primary"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            android:importantForAccessibility="yes"
+            android:contentDescription="Click to go to registration screen" />
+    </LinearLayout>
+</ScrollView>

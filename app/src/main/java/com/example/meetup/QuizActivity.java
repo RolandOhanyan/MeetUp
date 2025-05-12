@@ -9,8 +9,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -19,6 +21,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,7 +31,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class QuizActivity extends AppCompatActivity {
 
@@ -36,6 +43,10 @@ public class QuizActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private Button playAgainButton;
     private RequestQueue requestQueue;
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+
+
 
     private List<Question> questions = new ArrayList<>();
     private int currentQuestionIndex = 0;
@@ -55,6 +66,9 @@ public class QuizActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         progressText = findViewById(R.id.progressText);
         playAgainButton = findViewById(R.id.playAgainButton);
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
 
         requestQueue = Volley.newRequestQueue(this);
         fetchQuestions();
@@ -233,5 +247,46 @@ public class QuizActivity extends AppCompatActivity {
         option3Button.setVisibility(View.GONE);
         option4Button.setVisibility(View.GONE);
         playAgainButton.setVisibility(View.VISIBLE);
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+
+            db.collection("users").document(uid).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String username = documentSnapshot.getString("username");
+
+                            db.collection("leaderboard").document(uid).get()
+                                    .addOnSuccessListener(leaderboardSnapshot -> {
+                                        Long previousScore = leaderboardSnapshot.getLong("score");
+                                        if (previousScore == null || score > previousScore) {
+                                            Map<String, Object> scoreEntry = new HashMap<>();
+                                            scoreEntry.put("uid", uid);
+                                            scoreEntry.put("username", username);
+                                            scoreEntry.put("score", score);
+                                            scoreEntry.put("timestamp", System.currentTimeMillis());
+
+                                            db.collection("leaderboard").document(uid)
+                                                    .set(scoreEntry)
+                                                    .addOnSuccessListener(docRef -> {
+                                                        // Успешно сохранено/обновлено
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        Toast.makeText(QuizActivity.this, "Ошибка при сохранении результата!", Toast.LENGTH_SHORT).show();
+                                                    });
+                                        }
+                                    });
+                        }
+                    });
+        }
+
+        Button viewLeaderboardButton = new Button(this);
+        viewLeaderboardButton.setText("Посмотреть лидерборд");
+        ((LinearLayout) findViewById(R.id.quizLayout)).addView(viewLeaderboardButton);
+        viewLeaderboardButton.setOnClickListener(v -> {
+            startActivity(new Intent(QuizActivity.this, LeaderBoardActivity.class));
+        });
     }
+
 }

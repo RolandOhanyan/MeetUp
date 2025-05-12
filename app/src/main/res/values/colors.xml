@@ -7,5 +7,26 @@
     <color name="green">#4CAF50</color>
     <color name="red">#F44336</color>
     <color name="gray">#808080</color>
+    <color name="md_theme_light_primary">#6750A4</color>
+    <color name="md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="md_theme_light_primaryContainer">#EADDFF</color>
+    <color name="md_theme_light_onPrimaryContainer">#21005D</color>
+
+    <color name="md_theme_light_secondary">#625B71</color>
+    <color name="md_theme_light_onSecondary">#FFFFFF</color>
+    <color name="md_theme_light_background">#FFFBFE</color>
+    <color name="md_theme_light_onBackground">#1C1B1F</color>
+
+    <color name="md_theme_light_surface">#FFFBFE</color>
+    <color name="md_theme_light_onSurface">#1C1B1F</color>
+    <color name="md_theme_light_error">#B3261E</color>
+    <color name="md_theme_light_onError">#FFFFFF</color>
+
+    <!-- Нестандартные цвета, если хочешь -->
+    <color name="buttonColor">#7B61FF</color>
+    <color name="buttonTextColor">#FFFFFF</color>
+    <color name="correctAnswerColor">#4CAF50</color>
+    <color name="wrongAnswerColor">#F44336</color>
+
 
 </resources>
