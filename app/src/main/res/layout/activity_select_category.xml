@@ -9,48 +9,129 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:orientation="vertical"
-        android:padding="24dp"
-        android:layout_gravity="center_vertical">
+        android:gravity="center"
+        android:padding="24dp">
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="Choose a Category"
             android:textSize="26sp"
             android:textStyle="bold"
-            android:textColor="@color/md_theme_light_onBackground"
             android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp" />
+            android:textColor="@color/md_theme_light_onBackground"
+            android:layout_marginBottom="32dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonGeneral"
+        <!-- Карточка General -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardGeneral"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="General"
-            android:textColor="@color/buttonTextColor"
-            app:cornerRadius="24dp"
-            app:backgroundTint="@color/buttonColor"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp"
+            app:strokeColor="@color/md_theme_light_primary"
+            app:strokeWidth="2dp"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonScience"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Science"
-            android:textColor="@color/buttonTextColor"
-            app:cornerRadius="24dp"
-            app:backgroundTint="@color/buttonColor"
-            android:layout_marginBottom="16dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonHistory"
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_general"
+                    android:contentDescription="General" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="General"
+                    android:textSize="18sp"
+                    android:textColor="@color/md_theme_light_onBackground"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Карточка Science -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardScience"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="History"
-            android:textColor="@color/buttonTextColor"
-            app:cornerRadius="24dp"
-            app:backgroundTint="@color/buttonColor" />
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp"
+            app:strokeColor="@color/md_theme_light_primary"
+            app:strokeWidth="2dp"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_science"
+                    android:contentDescription="Science" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="Science"
+                    android:textSize="18sp"
+                    android:textColor="@color/md_theme_light_onBackground"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Карточка History -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp"
+            app:strokeColor="@color/md_theme_light_primary"
+            app:strokeWidth="2dp"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_history"
+                    android:contentDescription="History" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="History"
+                    android:textSize="18sp"
+                    android:textColor="@color/md_theme_light_onBackground"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
     </LinearLayout>
 </ScrollView>

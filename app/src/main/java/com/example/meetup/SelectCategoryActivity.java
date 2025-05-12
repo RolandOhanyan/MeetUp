@@ -3,8 +3,10 @@ package com.example.meetup;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.card.MaterialCardView;
 
 public class SelectCategoryActivity extends AppCompatActivity {
 
@@ -13,19 +15,19 @@ public class SelectCategoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_category);
 
-        Button buttonGeneral = findViewById(R.id.buttonGeneral);
-        Button buttonScience = findViewById(R.id.buttonScience);
-        Button buttonHistory = findViewById(R.id.buttonHistory);
+        MaterialCardView cardGeneral = findViewById(R.id.cardGeneral);
+        MaterialCardView cardScience = findViewById(R.id.cardScience);
+        MaterialCardView cardHistory = findViewById(R.id.cardHistory);
 
-        buttonGeneral.setOnClickListener(v -> launchQuiz("9"));     // General Knowledge
-        buttonScience.setOnClickListener(v -> launchQuiz("17"));    // Science & Nature
-        buttonHistory.setOnClickListener(v -> launchQuiz("23"));    // History
+        cardGeneral.setOnClickListener(v -> launchQuiz("9"));     // General Knowledge
+        cardScience.setOnClickListener(v -> launchQuiz("17"));    // Science & Nature
+        cardHistory.setOnClickListener(v -> launchQuiz("23"));    // History
     }
 
     private void launchQuiz(String categoryId) {
         Intent intent = new Intent(this, QuizActivity.class);
         intent.putExtra("CATEGORY_ID", categoryId);
         startActivity(intent);
-        finish(); // опционально
+        finish(); // Если хочешь закрыть это активити
     }
 }
