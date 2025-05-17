@@ -1,16 +1,11 @@
 package com.example.meetup;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,15 +32,12 @@ import java.util.Map;
 public class QuizActivity extends AppCompatActivity {
 
     private TextView questionTextView;
-    private Button option1Button, option2Button, option3Button, option4Button;
-    private TextView scoreTextView, progressText;
-    private ProgressBar progressBar;
-    private Button playAgainButton;
-    private RequestQueue requestQueue;
+    private TextView option1TextView, option2TextView, option3TextView, option4TextView;
+    private TextView progressNumberTextView;
+    private LinearLayout quizLayout;
+
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-
-
 
     private List<Question> questions = new ArrayList<>();
     private int currentQuestionIndex = 0;
@@ -58,25 +49,17 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quiz);
 
         questionTextView = findViewById(R.id.questionTextView);
-        option1Button = findViewById(R.id.option1Button);
-        option2Button = findViewById(R.id.option2Button);
-        option3Button = findViewById(R.id.option3Button);
-        option4Button = findViewById(R.id.option4Button);
-        scoreTextView = findViewById(R.id.scoreTextView);
-        progressBar = findViewById(R.id.progressBar);
-        progressText = findViewById(R.id.progressText);
-        playAgainButton = findViewById(R.id.playAgainButton);
+        option1TextView = findViewById(R.id.option1TextView);
+        option2TextView = findViewById(R.id.option2TextView);
+        option3TextView = findViewById(R.id.option3TextView);
+        option4TextView = findViewById(R.id.option4TextView);
+        progressNumberTextView = findViewById(R.id.progressNumberTextView);
+        quizLayout = findViewById(R.id.quizLayout);
+
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-
-        requestQueue = Volley.newRequestQueue(this);
         fetchQuestions();
-
-        playAgainButton.setOnClickListener(v -> {
-            // Закрываем текущую активность и возвращаемся назад
-            finish();
-        });
     }
 
     private void fetchQuestions() {
@@ -113,7 +96,7 @@ public class QuizActivity extends AppCompatActivity {
                 error -> error.printStackTrace()
         );
 
-        requestQueue.add(jsonObjectRequest);
+        Volley.newRequestQueue(this).add(jsonObjectRequest);
     }
 
     private void displayQuestion() {
@@ -123,170 +106,81 @@ public class QuizActivity extends AppCompatActivity {
             questionTextView.setText(currentQuestion.getQuestionText());
 
             List<String> options = currentQuestion.getOptions();
-            option1Button.setText(options.get(0));
-            option2Button.setText(options.get(1));
-            option3Button.setText(options.get(2));
-            option4Button.setText(options.get(3));
+            option1TextView.setText(options.get(0));
+            option2TextView.setText(options.get(1));
+            option3TextView.setText(options.get(2));
+            option4TextView.setText(options.get(3));
 
-            resetButtonColors();
+            resetTextViewsColors();
 
-            option1Button.setOnClickListener(v -> checkAnswer(option1Button.getText().toString()));
-            option2Button.setOnClickListener(v -> checkAnswer(option2Button.getText().toString()));
-            option3Button.setOnClickListener(v -> checkAnswer(option3Button.getText().toString()));
-            option4Button.setOnClickListener(v -> checkAnswer(option4Button.getText().toString()));
+            option1TextView.setOnClickListener(v -> checkAnswer(option1TextView.getText().toString()));
+            option2TextView.setOnClickListener(v -> checkAnswer(option2TextView.getText().toString()));
+            option3TextView.setOnClickListener(v -> checkAnswer(option3TextView.getText().toString()));
+            option4TextView.setOnClickListener(v -> checkAnswer(option4TextView.getText().toString()));
         } else {
             finishQuiz();
         }
     }
 
     private void updateProgress() {
-        int totalQuestions = questions.size();
-        int progress = (int) ((currentQuestionIndex + 1) * 100.0 / totalQuestions);
-        progressBar.setProgress(progress);
-        progressText.setText(String.format("%d/%d", currentQuestionIndex + 1, totalQuestions));
+        progressNumberTextView.setText(String.format("%d", currentQuestionIndex + 1));
     }
 
     private void checkAnswer(String selectedAnswer) {
         Question currentQuestion = questions.get(currentQuestionIndex);
-        Button selectedButton = findSelectedButton(selectedAnswer);
+        TextView selectedTextView = findSelectedTextView(selectedAnswer);
 
-        setButtonsEnabled(false);
+        setTextViewsEnabled(false);
 
         if (selectedAnswer.equals(currentQuestion.getCorrectAnswer())) {
             score++;
-            scoreTextView.setText("Score: " + score);
-            selectedButton.setBackgroundColor(ContextCompat.getColor(this, R.color.green));
+            selectedTextView.setBackground(ContextCompat.getDrawable(this, R.drawable.correct_answer_bg));
         } else {
-            selectedButton.setBackgroundColor(ContextCompat.getColor(this, R.color.red));
-            Button correctButton = findSelectedButton(currentQuestion.getCorrectAnswer());
-            if (correctButton != null) {
-                correctButton.setBackgroundColor(ContextCompat.getColor(this, R.color.green));
+            selectedTextView.setBackground(ContextCompat.getDrawable(this, R.drawable.wrong_answer_bg));
+            TextView correctTextView = findSelectedTextView(currentQuestion.getCorrectAnswer());
+            if (correctTextView != null) {
+                correctTextView.setBackground(ContextCompat.getDrawable(this, R.drawable.correct_answer_bg));
             }
         }
-
-        resetOtherButtonsColor(selectedButton, currentQuestion.getCorrectAnswer());
 
         new Handler().postDelayed(() -> {
             currentQuestionIndex++;
             if (currentQuestionIndex < questions.size()) {
                 displayQuestion();
-                setButtonsEnabled(true);
+                setTextViewsEnabled(true);
             } else {
                 finishQuiz();
             }
         }, 1500);
     }
 
-    private void resetOtherButtonsColor(Button selectedButton, String correctAnswer) {
-        List<Button> allButtons = List.of(option1Button, option2Button, option3Button, option4Button);
-        for (Button btn : allButtons) {
-            String text = btn.getText().toString();
-            if (!text.equals(correctAnswer) && btn != selectedButton) {
-                btn.setBackgroundColor(ContextCompat.getColor(this, android.R.color.white));
-            }
-        }
-    }
-
-    private void setButtonColor(Button button, int colorResId) {
-        button.setBackgroundColor(ContextCompat.getColor(this, colorResId));
-    }
-
-    private void resetButtonColors() {
-        int white = ContextCompat.getColor(this, android.R.color.white);
-        option1Button.setBackgroundColor(white);
-        option2Button.setBackgroundColor(white);
-        option3Button.setBackgroundColor(white);
-        option4Button.setBackgroundColor(white);
-    }
-
-    private Button findSelectedButton(String selectedAnswer) {
-        if (option1Button.getText().toString().equals(selectedAnswer)) return option1Button;
-        if (option2Button.getText().toString().equals(selectedAnswer)) return option2Button;
-        if (option3Button.getText().toString().equals(selectedAnswer)) return option3Button;
-        if (option4Button.getText().toString().equals(selectedAnswer)) return option4Button;
+    private TextView findSelectedTextView(String selectedAnswer) {
+        if (option1TextView.getText().toString().equals(selectedAnswer)) return option1TextView;
+        if (option2TextView.getText().toString().equals(selectedAnswer)) return option2TextView;
+        if (option3TextView.getText().toString().equals(selectedAnswer)) return option3TextView;
+        if (option4TextView.getText().toString().equals(selectedAnswer)) return option4TextView;
         return null;
     }
 
-    private void animateButton(Button button, boolean isCorrect) {
-        ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(button, "scaleX", 0.9f);
-        ObjectAnimator scaleDownY = ObjectAnimator.ofFloat(button, "scaleY", 0.9f);
-        scaleDownX.setDuration(100);
-        scaleDownY.setDuration(100);
-
-        AnimatorSet scaleDown = new AnimatorSet();
-        scaleDown.play(scaleDownX).with(scaleDownY);
-
-        scaleDown.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                ObjectAnimator scaleUpX = ObjectAnimator.ofFloat(button, "scaleX", 1f);
-                ObjectAnimator scaleUpY = ObjectAnimator.ofFloat(button, "scaleY", 1f);
-                scaleUpX.setDuration(100);
-                scaleUpY.setDuration(100);
-
-                AnimatorSet scaleUp = new AnimatorSet();
-                scaleUp.play(scaleUpX).with(scaleUpY);
-                scaleUp.start();
-            }
-        });
-
-        scaleDown.start();
+    private void resetTextViewsColors() {
+        option1TextView.setBackground(ContextCompat.getDrawable(this, R.drawable.sub_item_bg));
+        option2TextView.setBackground(ContextCompat.getDrawable(this, R.drawable.sub_item_bg));
+        option3TextView.setBackground(ContextCompat.getDrawable(this, R.drawable.sub_item_bg));
+        option4TextView.setBackground(ContextCompat.getDrawable(this, R.drawable.sub_item_bg));
     }
 
-    private void setButtonsEnabled(boolean enabled) {
-        option1Button.setEnabled(enabled);
-        option2Button.setEnabled(enabled);
-        option3Button.setEnabled(enabled);
-        option4Button.setEnabled(enabled);
+    private void setTextViewsEnabled(boolean enabled) {
+        option1TextView.setEnabled(enabled);
+        option2TextView.setEnabled(enabled);
+        option3TextView.setEnabled(enabled);
+        option4TextView.setEnabled(enabled);
     }
 
     private void finishQuiz() {
-        questionTextView.setText("Quiz finished! Your score: " + score + "/" + questions.size());
-        option1Button.setVisibility(View.GONE);
-        option2Button.setVisibility(View.GONE);
-        option3Button.setVisibility(View.GONE);
-        option4Button.setVisibility(View.GONE);
-        playAgainButton.setVisibility(View.VISIBLE);
-
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            String uid = currentUser.getUid();
-
-            db.collection("users").document(uid).get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            String username = documentSnapshot.getString("username");
-
-                            db.collection("leaderboard").document(uid).get()
-                                    .addOnSuccessListener(leaderboardSnapshot -> {
-                                        Long previousScore = leaderboardSnapshot.getLong("score");
-                                        if (previousScore == null || score > previousScore) {
-                                            Map<String, Object> scoreEntry = new HashMap<>();
-                                            scoreEntry.put("uid", uid);
-                                            scoreEntry.put("username", username);
-                                            scoreEntry.put("score", score);
-                                            scoreEntry.put("timestamp", System.currentTimeMillis());
-
-                                            db.collection("leaderboard").document(uid)
-                                                    .set(scoreEntry)
-                                                    .addOnSuccessListener(docRef -> {
-                                                        // Успешно сохранено/обновлено
-                                                    })
-                                                    .addOnFailureListener(e -> {
-                                                        Toast.makeText(QuizActivity.this, "Ошибка при сохранении результата!", Toast.LENGTH_SHORT).show();
-                                                    });
-                                        }
-                                    });
-                        }
-                    });
-        }
-
-        Button viewLeaderboardButton = new Button(this);
-        viewLeaderboardButton.setText("Посмотреть лидерборд");
-        ((LinearLayout) findViewById(R.id.quizLayout)).addView(viewLeaderboardButton);
-        viewLeaderboardButton.setOnClickListener(v -> {
-            startActivity(new Intent(QuizActivity.this, LeaderBoardActivity.class));
-        });
+        Intent intent = new Intent(QuizActivity.this, ResultActivity.class);
+        intent.putExtra("CORRECT_COUNT", score);
+        intent.putExtra("WRONG_COUNT", questions.size() - score);
+        startActivity(intent);
+        finish(); // Закрываем QuizActivity
     }
-
 }

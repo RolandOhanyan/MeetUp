@@ -28,5 +28,10 @@
     <color name="correctAnswerColor">#4CAF50</color>
     <color name="wrongAnswerColor">#F44336</color>
 
+    <color name="first">#00CCA4</color>
+    <color name="second">#00E89D</color>
+    <color name="purple_500">#6200EE</color>
+    <color name="teal_700">#018786</color>
+
 
 </resources>

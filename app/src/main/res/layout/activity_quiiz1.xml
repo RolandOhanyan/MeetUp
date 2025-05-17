@@ -1,10 +1,10 @@
 <LinearLayout
-    android:id="@+id/quizLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_margin="20.8dp"
@@ -19,7 +19,6 @@
             android:textColor="@color/black"
             android:textSize="26sp"
             android:textStyle="bold"
-            android:fontFamily="@font/inter_variable"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/linearLayout"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,94 +32,79 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <TextView
-                android:id="@+id/progressNumberTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1"
                 android:textColor="@color/black"
                 android:textSize="40sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/inter_variable" />
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="/10"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/inter_variable" />
+                android:textStyle="bold" />
         </LinearLayout>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/questionTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16sp"
         android:layout_margin="16sp"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:background="@drawable/item_bg" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16sp"
+        android:layout_marginStart="16sp"
+        android:layout_marginEnd="16sp"
+        android:layout_marginTop="16sp"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:background="@drawable/item_bg"
-        android:fontFamily="@font/inter_variable" />
-
+        android:background="@drawable/sub_item_bg"
+        android:gravity="center"/>
     <TextView
-        android:id="@+id/option1TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16sp"
         android:layout_marginStart="16sp"
         android:layout_marginEnd="16sp"
         android:layout_marginTop="16sp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
         android:background="@drawable/sub_item_bg"
-        android:gravity="center"
-        android:fontFamily="@font/inter_variable" />
-
+        android:gravity="center"/>
     <TextView
-        android:id="@+id/option2TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16sp"
         android:layout_marginStart="16sp"
         android:layout_marginEnd="16sp"
         android:layout_marginTop="16sp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
         android:background="@drawable/sub_item_bg"
-        android:gravity="center"
-        android:fontFamily="@font/inter_variable" />
-
+        android:gravity="center"/>
     <TextView
-        android:id="@+id/option3TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16sp"
         android:layout_marginStart="16sp"
         android:layout_marginEnd="16sp"
         android:layout_marginTop="16sp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
         android:background="@drawable/sub_item_bg"
-        android:gravity="center"
-        android:fontFamily="@font/inter_variable" />
-
-    <TextView
-        android:id="@+id/option4TextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16sp"
-        android:layout_marginTop="16sp"
-        android:layout_marginEnd="16sp"
-        android:background="@drawable/sub_item_bg"
-        android:fontFamily="@font/inter_variable"
-        android:gravity="center"
-        android:padding="16sp"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:gravity="center"/>
 </LinearLayout>

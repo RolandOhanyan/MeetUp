@@ -4,35 +4,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/md_theme_light_background"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:padding="24dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center"
-        android:padding="24dp">
+        android:gravity="center_horizontal">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Choose a Category"
             android:textSize="26sp"
             android:textStyle="bold"
-            android:gravity="center"
             android:textColor="@color/md_theme_light_onBackground"
-            android:layout_marginBottom="32dp" />
+            android:layout_marginBottom="32dp"
+            android:gravity="center" />
 
-        <!-- Карточка General -->
+        <!-- General -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardGeneral"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="16dp"
-            app:cardElevation="6dp"
-            app:strokeColor="@color/md_theme_light_primary"
-            app:strokeWidth="2dp"
+            app:cardElevation="4dp"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground">
 
@@ -41,35 +39,34 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:padding="16dp"
+                android:background="@drawable/bg"
                 android:gravity="center_vertical">
 
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:src="@drawable/ic_general"
-                    android:contentDescription="General" />
+                    android:contentDescription="General Icon" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="General"
+                    android:text="General Knowledge"
                     android:textSize="18sp"
                     android:textColor="@color/md_theme_light_onBackground"
                     android:textStyle="bold" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Карточка Science -->
+        <!-- Science -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardScience"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="16dp"
-            app:cardElevation="6dp"
-            app:strokeColor="@color/md_theme_light_primary"
-            app:strokeWidth="2dp"
+            app:cardElevation="4dp"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground">
 
@@ -78,34 +75,34 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:padding="16dp"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:background="@drawable/bg">
 
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:src="@drawable/ic_science"
-                    android:contentDescription="Science" />
+                    android:contentDescription="Science Icon" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:text="Science"
+                    android:text="Science And Nature"
                     android:textSize="18sp"
                     android:textColor="@color/md_theme_light_onBackground"
                     android:textStyle="bold" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Карточка History -->
+        <!-- History -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardHistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             app:cardCornerRadius="16dp"
-            app:cardElevation="6dp"
-            app:strokeColor="@color/md_theme_light_primary"
-            app:strokeWidth="2dp"
+            app:cardElevation="4dp"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground">
 
@@ -114,19 +111,128 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:padding="16dp"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:background="@drawable/bg">
 
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:src="@drawable/ic_history"
-                    android:contentDescription="History" />
+                    android:contentDescription="History Icon" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:text="History"
+                    android:textSize="18sp"
+                    android:textColor="@color/md_theme_light_onBackground"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Sports -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardSports"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:background="@drawable/bg"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_sports"
+                    android:contentDescription="Sports Icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="Sports"
+                    android:textSize="18sp"
+                    android:textColor="@color/md_theme_light_onBackground"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Geography -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardGeography"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:background="@drawable/bg"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_geography"
+                    android:contentDescription="Geography Icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="Geography"
+                    android:textSize="18sp"
+                    android:textColor="@color/md_theme_light_onBackground"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Art -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardArt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:background="@drawable/bg"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_art"
+                    android:contentDescription="Art Icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="Art"
                     android:textSize="18sp"
                     android:textColor="@color/md_theme_light_onBackground"
                     android:textStyle="bold" />
