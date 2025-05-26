@@ -3,20 +3,20 @@ package com.example.meetup;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Gravity;
+import android.text.Html;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONArray;
@@ -25,9 +25,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class QuizActivity extends AppCompatActivity {
 
@@ -75,14 +73,15 @@ public class QuizActivity extends AppCompatActivity {
                         JSONArray results = response.getJSONArray("results");
                         for (int i = 0; i < results.length(); i++) {
                             JSONObject questionJson = results.getJSONObject(i);
-                            String questionText = questionJson.getString("question");
-                            String correctAnswer = questionJson.getString("correct_answer");
-                            JSONArray incorrectAnswers = questionJson.getJSONArray("incorrect_answers");
 
+                            String questionText = Html.fromHtml(questionJson.getString("question")).toString();
+                            String correctAnswer = Html.fromHtml(questionJson.getString("correct_answer")).toString();
+
+                            JSONArray incorrectAnswers = questionJson.getJSONArray("incorrect_answers");
                             List<String> options = new ArrayList<>();
                             options.add(correctAnswer);
                             for (int j = 0; j < incorrectAnswers.length(); j++) {
-                                options.add(incorrectAnswers.getString(j));
+                                options.add(Html.fromHtml(incorrectAnswers.getString(j)).toString());
                             }
 
                             Collections.shuffle(options);
@@ -91,9 +90,13 @@ public class QuizActivity extends AppCompatActivity {
                         displayQuestion();
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        Toast.makeText(this, "Ошибка при разборе вопросов", Toast.LENGTH_SHORT).show();
                     }
                 },
-                error -> error.printStackTrace()
+                error -> {
+                    error.printStackTrace();
+                    Toast.makeText(this, "Ошибка загрузки вопросов", Toast.LENGTH_SHORT).show();
+                }
         );
 
         Volley.newRequestQueue(this).add(jsonObjectRequest);
@@ -112,6 +115,7 @@ public class QuizActivity extends AppCompatActivity {
             option4TextView.setText(options.get(3));
 
             resetTextViewsColors();
+            setTextViewsEnabled(true);
 
             option1TextView.setOnClickListener(v -> checkAnswer(option1TextView.getText().toString()));
             option2TextView.setOnClickListener(v -> checkAnswer(option2TextView.getText().toString()));
@@ -147,7 +151,6 @@ public class QuizActivity extends AppCompatActivity {
             currentQuestionIndex++;
             if (currentQuestionIndex < questions.size()) {
                 displayQuestion();
-                setTextViewsEnabled(true);
             } else {
                 finishQuiz();
             }
@@ -180,7 +183,9 @@ public class QuizActivity extends AppCompatActivity {
         Intent intent = new Intent(QuizActivity.this, ResultActivity.class);
         intent.putExtra("CORRECT_COUNT", score);
         intent.putExtra("WRONG_COUNT", questions.size() - score);
+        intent.putExtra("CATEGORY_ID", getIntent().getStringExtra("CATEGORY_ID")); // передаём категорию
         startActivity(intent);
-        finish(); // Закрываем QuizActivity
+        finish();
     }
+
 }

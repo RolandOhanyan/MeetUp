@@ -1,3 +1,4 @@
+
 package com.example.meetup;
 
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,22 +40,40 @@ public class LeaderBoardActivity extends AppCompatActivity {
     private void loadLeaderboard() {
         db.collection("leaderboard")
                 .orderBy("score", Query.Direction.DESCENDING)
-                .limit(10)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     leaderboardItems.clear();
-                    int rank = 1;
+
+                    Map<String, Long> bestScores = new HashMap<>();
+
                     for (var doc : queryDocumentSnapshots) {
-                        Map<String, Object> data = doc.getData();
-                        String username = (String) data.get("username");
-                        Long score = (Long) data.get("score");
-                        leaderboardItems.add(rank + ". " + username + " — " + score + " очков");
+                        String username = (String) doc.get("username");
+                        Long score = (Long) doc.get("score");
+
+                        if (username != null && score != null) {
+                            // Добавляем только лучший результат для каждого пользователя
+                            if (!bestScores.containsKey(username) || score > bestScores.get(username)) {
+                                bestScores.put(username, score);
+                            }
+                        }
+                    }
+
+                    // Сортируем по убыванию очков
+                    List<Map.Entry<String, Long>> sorted = new ArrayList<>(bestScores.entrySet());
+                    sorted.sort((a, b) -> Long.compare(b.getValue(), a.getValue()));
+
+                    int rank = 1;
+                    for (Map.Entry<String, Long> entry : sorted) {
+                        if (rank > 10) break;
+                        leaderboardItems.add(rank + ". " + entry.getKey() + " — " + entry.getValue() + " очков");
                         rank++;
                     }
+
                     adapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Ошибка загрузки таблицы лидеров!", Toast.LENGTH_SHORT).show();
                 });
     }
+
 }
